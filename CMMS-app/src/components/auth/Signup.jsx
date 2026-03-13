@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, User, Loader2, ArrowRight, Building, Hash } from 'lucide-react';
+import { Mail, Lock, User, Loader2, ArrowRight, Building, Hash, Phone, Shield, Home } from 'lucide-react';
 import { validateEmail, validatePassword, validateName, validateRequiredField } from '../../utils/validation';
 import api from '../../Api';
 
-export default function Signup({ setView }) {
-    const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '', roll_no: '', hall_of_residence: '' });
+export default function Signup({ setView, initialRole = 'student' }) {
+    const [formData, setFormData] = useState({
+        name: '', email: '', password: '', confirmPassword: '',
+        roll_no: '', hall_of_residence: '', room_no: '', contact_no: '', role: initialRole
+    });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -16,8 +19,10 @@ export default function Signup({ setView }) {
         setError('');
 
         if (!validateName(formData.name)) return setError('Name must be at least 2 characters');
-        if (!validateRequiredField(formData.roll_no)) return setError('Roll Number is required');
-        if (!validateRequiredField(formData.hall_of_residence)) return setError('Hall of Residence is required');
+        if (formData.role === 'student') {
+            if (!validateRequiredField(formData.roll_no)) return setError('Roll Number is required');
+            if (!validateRequiredField(formData.hall_of_residence)) return setError('Hall of Residence is required');
+        }
         if (!validateEmail(formData.email)) return setError('Please enter a valid email address');
         if (!validatePassword(formData.password)) return setError('Password must be at least 8 characters, with 1 uppercase, 1 lowercase, and 1 number');
         if (formData.password !== formData.confirmPassword) return setError('Passwords do not match');
@@ -28,8 +33,11 @@ export default function Signup({ setView }) {
             const res = await api.post('/api/signup/', {
                 name: formData.name,
                 email: formData.email,
-                roll_no: formData.roll_no,
-                hall_of_residence: formData.hall_of_residence,
+                roll_no: formData.role === 'student' ? formData.roll_no : '',
+                hall_of_residence: formData.role === 'student' ? formData.hall_of_residence : '',
+                room_no: formData.role === 'student' ? formData.room_no : '',
+                contact_no: formData.contact_no,
+                role: formData.role,
                 password: formData.password
             });
             console.log('Signup Success:', res.data);
@@ -52,105 +60,135 @@ export default function Signup({ setView }) {
             className="w-full max-w-md"
         >
             <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-white mb-2">Create Account</h2>
-                <p className="text-gray-400">Join us to start managing your assets</p>
+                <h2 className="text-3xl font-bold text-slate-900 mb-2">Create Account</h2>
+                <p className="text-slate-500">Join us to start managing your assets</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4 flex flex-col">
                 {error && (
-                    <div className="p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-400 text-sm text-center">
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm text-center">
                         {error}
                     </div>
                 )}
 
+                {/* Role is determined by initial selection from Home Page */}
+
                 <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                     <input
                         type="text"
                         name="name"
                         placeholder="Full Name"
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-10 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-10 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
                         required
                     />
                 </div>
 
                 <div className="relative">
-                    <Hash className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                     <input
                         type="text"
-                        name="roll_no"
-                        placeholder="Roll Number"
-                        value={formData.roll_no}
+                        name="contact_no"
+                        placeholder="Contact Number"
+                        value={formData.contact_no}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-10 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                        required
+                        className="w-full bg-white border border-slate-200 rounded-xl px-10 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
                     />
                 </div>
 
-                <div className="relative">
-                    <Building className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <select
-                        name="hall_of_residence"
-                        value={formData.hall_of_residence}
-                        onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-10 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none text-gray-400"
-                        required
-                    >
-                        <option value="" disabled className="bg-gray-900 text-gray-400">Select Hall of Residence</option>
-                        <option value="Hall 1" className="bg-gray-900 text-white">Hall 1</option>
-                        <option value="Hall 2" className="bg-gray-900 text-white">Hall 2</option>
-                        <option value="Hall 3" className="bg-gray-900 text-white">Hall 3</option>
-                        <option value="Hall 4" className="bg-gray-900 text-white">Hall 4</option>
-                        <option value="Hall 5" className="bg-gray-900 text-white">Hall 5</option>
-                        <option value="Hall 6" className="bg-gray-900 text-white">Hall 6</option>
-                        <option value="Hall 7" className="bg-gray-900 text-white">Hall 7</option>
-                        <option value="Hall 8" className="bg-gray-900 text-white">Hall 8</option>
-                        <option value="Hall 9" className="bg-gray-900 text-white">Hall 9</option>
-                        <option value="Hall 10" className="bg-gray-900 text-white">Hall 10</option>
-                        <option value="Hall 11" className="bg-gray-900 text-white">Hall 11</option>
-                        <option value="Hall 12" className="bg-gray-900 text-white">Hall 12</option>
-                        <option value="Hall 13" className="bg-gray-900 text-white">Hall 13</option>
-                        <option value="Hall 14" className="bg-gray-900 text-white">Hall 14</option>
-                    </select>
-                </div>
+                {formData.role === 'student' && (
+                    <>
+                        <div className="relative">
+                            <Hash className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                            <input
+                                type="text"
+                                name="roll_no"
+                                placeholder="Roll Number"
+                                value={formData.roll_no}
+                                onChange={handleChange}
+                                className="w-full bg-white border border-slate-200 rounded-xl px-10 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
+                                required
+                            />
+                        </div>
+
+                        <div className="relative">
+                            <Building className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                            <select
+                                name="hall_of_residence"
+                                value={formData.hall_of_residence}
+                                onChange={handleChange}
+                                className="w-full bg-white border border-slate-200 rounded-xl px-10 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm appearance-none"
+                                required
+                            >
+                                <option value="" disabled>Select Hall of Residence</option>
+                                <option value="Hall 1">Hall 1</option>
+                                <option value="Hall 2">Hall 2</option>
+                                <option value="Hall 3">Hall 3</option>
+                                <option value="Hall 4">Hall 4</option>
+                                <option value="Hall 5">Hall 5</option>
+                                <option value="Hall 6">Hall 6</option>
+                                <option value="Hall 7">Hall 7</option>
+                                <option value="Hall 8">Hall 8</option>
+                                <option value="Hall 9">Hall 9</option>
+                                <option value="Hall 10">Hall 10</option>
+                                <option value="Hall 11">Hall 11</option>
+                                <option value="Hall 12">Hall 12</option>
+                                <option value="Hall 13">Hall 13</option>
+                                <option value="Hall 14">Hall 14</option>
+                            </select>
+                        </div>
+
+                        <div className="relative">
+                            <Home className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                            <input
+                                type="text"
+                                name="room_no"
+                                placeholder="Room Number"
+                                value={formData.room_no}
+                                onChange={handleChange}
+                                className="w-full bg-white border border-slate-200 rounded-xl px-10 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
+                            />
+                        </div>
+                    </>
+                )}
 
                 <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                     <input
                         type="email"
                         name="email"
                         placeholder="Email Address"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-10 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-10 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
                         required
                     />
                 </div>
 
                 <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                     <input
                         type="password"
                         name="password"
                         placeholder="Password"
                         value={formData.password}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-10 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-10 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
                         required
                     />
                 </div>
 
                 <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                     <input
                         type="password"
                         name="confirmPassword"
                         placeholder="Confirm Password"
                         value={formData.confirmPassword}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-10 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-10 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
                         required
                     />
                 </div>
@@ -169,11 +207,11 @@ export default function Signup({ setView }) {
                 </button>
             </form>
 
-            <div className="mt-8 text-center text-gray-400 text-sm">
+            <div className="mt-8 text-center text-slate-500 text-sm">
                 Already have an account?{' '}
                 <button
                     onClick={() => setView('login')}
-                    className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                    className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
                 >
                     Sign In
                 </button>

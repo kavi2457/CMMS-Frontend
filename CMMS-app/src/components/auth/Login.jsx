@@ -4,8 +4,8 @@ import { Mail, Lock, Loader2, ArrowRight } from 'lucide-react';
 import { validateEmail } from '../../utils/validation';
 import api from '../../Api'; // Import the configured Axios instance
 
-export default function Login({ setView }) {
-    const [formData, setFormData] = useState({ email: '', password: '' });
+export default function Login({ setView, initialRole = 'student' }) {
+    const [formData, setFormData] = useState({ email: '', password: '', role: initialRole });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -47,52 +47,52 @@ export default function Login({ setView }) {
             className="w-full max-w-md"
         >
             <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>
-                <p className="text-gray-400">Sign in to access your dashboard</p>
+                <h2 className="text-3xl font-bold text-slate-900 mb-2">Welcome Back</h2>
+                <p className="text-slate-500">Sign in to access your dashboard</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5 flex flex-col">
                 {error && (
-                    <div className="p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-400 text-sm text-center">
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm text-center">
                         {error}
                     </div>
                 )}
 
                 <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                     <input
                         type="email"
                         name="email"
                         placeholder="Email Address"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-10 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-10 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
                         required
                     />
                 </div>
 
                 <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                     <input
                         type="password"
                         name="password"
                         placeholder="Password"
                         value={formData.password}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-10 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-10 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
                         required
                     />
                 </div>
 
                 <div className="flex justify-between items-center text-sm px-1">
-                    <label className="flex items-center text-gray-400 gap-2 cursor-pointer hover:text-gray-300">
-                        <input type="checkbox" className="rounded border-none bg-white/10 text-blue-500 focus:ring-0 w-4 h-4 cursor-pointer" />
+                    <label className="flex items-center text-slate-500 gap-2 cursor-pointer hover:text-slate-700">
+                        <input type="checkbox" className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer" />
                         <span>Remember me</span>
                     </label>
                     <button
                         type="button"
                         onClick={() => setView('forgot-password')}
-                        className="text-blue-400 hover:text-blue-300 transition-colors"
+                        className="text-indigo-600 hover:text-indigo-700 transition-colors"
                     >
                         Forgot Password?
                     </button>
@@ -112,11 +112,11 @@ export default function Login({ setView }) {
                 </button>
             </form>
 
-            <div className="mt-8 text-center text-gray-400 text-sm">
+            <div className="mt-8 text-center text-slate-500 text-sm">
                 Don&apos;t have an account?{' '}
                 <button
                     onClick={() => setView('signup')}
-                    className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                    className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors"
                 >
                     Sign Up
                 </button>

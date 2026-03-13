@@ -42,8 +42,8 @@ export default function ForgotPassword({ setView }) {
             className="w-full max-w-md"
         >
             <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-white mb-2">Reset Password</h2>
-                <p className="text-gray-400">Enter your email to receive recovery instructions</p>
+                <h2 className="text-3xl font-bold text-slate-900 mb-2">Reset Password</h2>
+                <p className="text-slate-500">Enter your email to receive recovery instructions</p>
             </div>
 
             {success ? (
@@ -53,7 +53,7 @@ export default function ForgotPassword({ setView }) {
                     </div>
                     <button
                         onClick={() => setView('login')}
-                        className="text-blue-400 hover:text-blue-300 font-medium transition-colors flex items-center justify-center gap-2 w-full"
+                        className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors flex items-center justify-center gap-2 w-full"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         Back to Sign In
@@ -62,19 +62,19 @@ export default function ForgotPassword({ setView }) {
             ) : (
                 <form onSubmit={handleSubmit} className="space-y-5 flex flex-col">
                     {error && (
-                        <div className="p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-400 text-sm text-center">
+                        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm text-center">
                             {error}
                         </div>
                     )}
 
                     <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
                         <input
                             type="email"
                             placeholder="Email Address"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-10 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                            className="w-full bg-white border border-slate-200 rounded-xl px-10 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
                             required
                         />
                     </div>
@@ -98,7 +98,7 @@ export default function ForgotPassword({ setView }) {
                 <div className="mt-8 text-center">
                     <button
                         onClick={() => setView('login')}
-                        className="text-gray-400 hover:text-white text-sm font-medium transition-colors flex items-center justify-center gap-2 mx-auto"
+                        className="text-slate-500 hover:text-slate-800 text-sm font-medium transition-colors flex items-center justify-center gap-2 mx-auto"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         Back to Sign In

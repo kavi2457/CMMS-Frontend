@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import AuthPage from './pages/AuthPage';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
         <Route path="/login" element={<AuthPage />} />
         {/* Redirect root to login for now */}
         <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/home" element={<HomePage />} />
 
         {/* Placeholder for future dashboard */}
         <Route path="/dashboard" element={

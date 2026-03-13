@@ -85,7 +85,7 @@ api.interceptors.response.use(
                         .find(row => row.startsWith("csrftoken="))
                         ?.split("=")[1];
 
-                    await axios.post(`${import.meta.env.VITE_API_URL}/auth/logout/`, {}, {
+                    await axios.post(`${import.meta.env.VITE_API_URL}/api/logout/`, {}, {
                         withCredentials: true,
                         headers: csrfToken ? { "X-CSRFToken": csrfToken } : {}
                     });
