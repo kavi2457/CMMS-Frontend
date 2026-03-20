@@ -5,16 +5,35 @@ import HomePage from './pages/HomePage';
 import DailyMenu from './pages/DailyMenu';
 import ExtrasPage from './pages/ExtrasPage';
 import FirstPage from './pages/FirstPage';
-import BillingPage from './pages/BillingPage';
+import DailyMenu from './pages/DailyMenu';
+import ComplaintPage from "./pages/ComplaintPage";
+import ProtectedRoute from './components/auth/ProtectedRoute';
+
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<AuthPage />} />
-        <Route path="/first" element={<FirstPage />} />
+        
+        {/* Protected Routes */}
+        <Route path="/first" element={
+          <ProtectedRoute>
+            <FirstPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/menu" element={
+          <ProtectedRoute>
+            <DailyMenu />
+          </ProtectedRoute>
+        } />
+        <Route path="/feedbacks" element={
+          <ProtectedRoute>
+            <ComplaintPage />
+          </ProtectedRoute>
+        } />
 
-        {/* Redirect root to the Landing/Home page */}
+        {/* Public Routes */}
         <Route path="/" element={<Navigate to="/home" replace />} />
 
         {/* This is the CMMS Login/Landing page your teammate built */}
@@ -34,3 +53,4 @@ function App() {
 }
 
 export default App;
+
